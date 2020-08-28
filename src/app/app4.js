@@ -5,7 +5,8 @@ let responseData = '';
 http.request({
     'host':'localhost',
     'port':3000,
-    'method':'GET'
+    'method':'GET',
+    'path':'/login?username=zhangsan&password=123456'
 },function(response){
     response.on('data',function(chunk){
         responseData += chunk;
