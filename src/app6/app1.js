@@ -1,21 +1,14 @@
 const http = require('http');
+const events = require('events');
 
 const httpServer = http.createServer();
-// alias for addListener
 
-httpServer.addListener('request',(request,response) => {
+httpServer.setMaxListeners(2);
+httpServer.on('request',(request,response) => {
     if (request.url === '/'){
         console.log('addListener');
         response.end('end')
     }
-})
-
-httpServer.once('request',(request,response) => {
-    if (request.url === '/') {
-        console.log('on');
-        response.end('end2');
-    }
-
 });
 
 const listener = (request,response) => {
@@ -25,15 +18,16 @@ const listener = (request,response) => {
     }
 }
 
+const listener2 = (request,response) => {
+    if (request.url === '/') {
+        console.log('hello world');
+        response.end('welcome');
+    }
+}
+console.log('default max listener count:'+events.EventEmitter.defaultMaxListeners);
+
 httpServer.on('request',listener);
-
-// off alias for removeListener
-//httpServer.removeListener('request',listener);
-
-httpServer.removeAllListeners('request');
-
-
-
+httpServer.on('request',listener2);
 
 httpServer.listen(3000,()=>{
     console.log('listening to port 3000');
