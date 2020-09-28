@@ -1,1 +1,26 @@
+const Koa = require('koa');
+const path = require('path');
+const combineRouters = require('koa-combine-routers');
+const bodyParser = require('koa-bodyparser');
+const koaStatic = require('koa-static');
+const koaCompress = require('koa-compress');
 
+const app = new Koa();
+
+const userRouter = require('../router/userRouter');
+
+app.use(koaCompress({
+    threshold: 2048
+}))
+
+app.use(bodyParser());
+
+app.use(koaStatic(path.join(__dirname,'../dist')));
+
+const unifiedRouters = combineRouters(
+   userRouter
+)();
+
+app.use(unifiedRouters);
+
+module.exports = app;
